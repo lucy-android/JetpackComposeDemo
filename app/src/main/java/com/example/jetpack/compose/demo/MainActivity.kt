@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -61,8 +63,7 @@ class MainActivity : ComponentActivity() {
             JetpackComposeDemoTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     HomeScreenApp()
                 }
@@ -74,8 +75,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        text = "Hello $name!", modifier = modifier
     )
 }
 
@@ -138,10 +138,16 @@ fun HomeScreenApp() {
                     letterSpacing = 0.01.sp,
                     color = Color(0xFF333333)
                 )
-                TextField(
-                    value = textState.value,
+                TextField(value = textState.value,
                     onValueChange = {
                         textState.value = it
+                    },
+                    trailingIcon = {
+                        Icon(Icons.Default.Clear,
+                            contentDescription = "clear text",
+                            modifier = Modifier.clickable {
+                                    textState.value = TextFieldValue("")
+                                })
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -161,8 +167,7 @@ fun HomeScreenApp() {
                             fontSize = 16.sp,
                             fontFamily = robotoFamily
                         )
-                    }
-                )
+                    })
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
@@ -219,9 +224,7 @@ fun HyperlinkText(
                     color = Color(0x80333333),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
-                ),
-                start = 0,
-                end = fullText.indexOf(link) - 1
+                ), start = 0, end = fullText.indexOf(link) - 1
             )
             append(fullText)
             addStyle(
@@ -230,42 +233,26 @@ fun HyperlinkText(
                     fontSize = fontSize,
                     fontWeight = linkTextFontWeight,
                     textDecoration = linkTextDecoration
-                ),
-                start = startIndex,
-                end = endIndex
+                ), start = startIndex, end = endIndex
             )
             addStringAnnotation(
-                tag = "URL",
-                annotation = hyperlinks[index],
-                start = startIndex,
-                end = endIndex
+                tag = "URL", annotation = hyperlinks[index], start = startIndex, end = endIndex
             )
         }
         addStyle(
             style = SpanStyle(
                 fontSize = fontSize
-            ),
-            start = 0,
-            end = fullText.length
+            ), start = 0, end = fullText.length
         )
     }
 
     val uriHandler = LocalUriHandler.current
 
-    ClickableText(
-        modifier = modifier,
-        text = annotatedString,
-        style = TextStyle(
-            color = Color(0x80333333),
-            fontSize = 16.sp,
-            fontFamily = robotoFamily
-        ),
-        onClick = {
-            annotatedString
-                .getStringAnnotations("URL", it, it)
-                .firstOrNull()?.let { stringAnnotation ->
-                    uriHandler.openUri(stringAnnotation.item)
-                }
-        }
-    )
+    ClickableText(modifier = modifier, text = annotatedString, style = TextStyle(
+        color = Color(0x80333333), fontSize = 16.sp, fontFamily = robotoFamily
+    ), onClick = {
+        annotatedString.getStringAnnotations("URL", it, it).firstOrNull()?.let { stringAnnotation ->
+                uriHandler.openUri(stringAnnotation.item)
+            }
+    })
 }
