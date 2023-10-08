@@ -30,6 +30,8 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +45,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -95,6 +98,7 @@ fun HomeScreenApp() {
 
         topBar = {
             Column {
+                val textState = remember { mutableStateOf(TextFieldValue()) }
                 Surface(shadowElevation = 3.dp) {
                     CenterAlignedTopAppBar(
                         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -135,8 +139,10 @@ fun HomeScreenApp() {
                     color = Color(0xFF333333)
                 )
                 TextField(
-                    value = "",
-                    onValueChange = {},
+                    value = textState.value,
+                    onValueChange = {
+                        textState.value = it
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
