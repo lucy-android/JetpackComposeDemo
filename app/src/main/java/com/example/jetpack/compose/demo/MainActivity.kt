@@ -184,11 +184,12 @@ fun HomeScreenApp() {
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
-                            imageVector = if (checkBoxState.value) {
-                                Icons.Default.Check
+                            imageVector = Icons.Default.Check, contentDescription = "",
+                            tint = if (checkBoxState.value) {
+                                Color.Gray
                             } else {
-                                Icons.Default.Clear
-                            }, contentDescription = ""
+                                Color.Transparent
+                            }
                         )
                     }
                     HyperlinkText(
