@@ -146,8 +146,8 @@ fun HomeScreenApp() {
                         Icon(Icons.Default.Clear,
                             contentDescription = "clear text",
                             modifier = Modifier.clickable {
-                                    textState.value = TextFieldValue("")
-                                })
+                                textState.value = TextFieldValue("")
+                            })
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -169,6 +169,8 @@ fun HomeScreenApp() {
                         )
                     })
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    // it is the checkbox
+                    val checkBoxState = remember { mutableStateOf(false) }
                     Box(
                         modifier = Modifier
                             .padding(16.dp)
@@ -177,11 +179,17 @@ fun HomeScreenApp() {
                             .background(Color(0xffcccccc))
                             .padding(3.dp)
                             .clip(RoundedCornerShape(20))
-                            .background(Color.White),
-                        contentAlignment = Alignment.Center
+                            .background(Color.White)
+                            .clickable { checkBoxState.value = !checkBoxState.value },
+                        contentAlignment = Alignment.Center,
                     ) {
-
-                        Icon(imageVector = Icons.Default.Check, contentDescription = "")
+                        Icon(
+                            imageVector = if (checkBoxState.value) {
+                                Icons.Default.Check
+                            } else {
+                                Icons.Default.Clear
+                            }, contentDescription = ""
+                        )
                     }
                     HyperlinkText(
                         fullText = "I agree with the processing of my \npersonal data.",
@@ -252,7 +260,7 @@ fun HyperlinkText(
         color = Color(0x80333333), fontSize = 16.sp, fontFamily = robotoFamily
     ), onClick = {
         annotatedString.getStringAnnotations("URL", it, it).firstOrNull()?.let { stringAnnotation ->
-                uriHandler.openUri(stringAnnotation.item)
-            }
+            uriHandler.openUri(stringAnnotation.item)
+        }
     })
 }
