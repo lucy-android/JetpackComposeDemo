@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,6 +55,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import com.example.jetpack.compose.demo.ui.theme.JetpackComposeDemoTheme
 
 class MainActivity : ComponentActivity() {
@@ -196,6 +198,20 @@ fun HomeScreenApp() {
                         fullText = "I agree with the processing of my \npersonal data.",
                         linkText = listOf("personal data"),
                         hyperlinks = listOf("https://loremipsum.io/privacy-policy/#:~:text=We%20may%20collect%20your%20IP,to%20improve%20your%20overall%20experience.")
+                    )
+                }
+                Button(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(10)
+
+                ) {
+                    Text(
+                        text = "Continue".uppercase(),
+                        fontFamily = robotoFamily,
+                        letterSpacing = 2.sp
                     )
                 }
             }
