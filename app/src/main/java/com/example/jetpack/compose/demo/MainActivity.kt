@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -200,11 +201,25 @@ fun HomeScreenApp() {
                         hyperlinks = listOf("https://loremipsum.io/privacy-policy/#:~:text=We%20may%20collect%20your%20IP,to%20improve%20your%20overall%20experience.")
                     )
                 }
+
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .padding(top = 8.dp) // adding some space to the label
+                            .background(
+                                color = Color(0x33333340),
+                                // rounded corner to match with the OutlinedTextField
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                    )
+                }
                 Button(
                     onClick = { /*TODO*/ },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .fillMaxWidth(),
                     shape = RoundedCornerShape(10)
 
                 ) {
@@ -214,6 +229,7 @@ fun HomeScreenApp() {
                         letterSpacing = 2.sp
                     )
                 }
+
             }
         },
     ) {  /* do something */ }
