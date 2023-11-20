@@ -1,12 +1,7 @@
 package com.example.jetpack.compose.demo
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -99,13 +94,17 @@ fun GreetingPreview() {
 @Composable
 fun HomeScreenApp() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val textState = remember { mutableStateOf(TextFieldValue()) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
 
         topBar = {
             Column {
-                val textState = remember { mutableStateOf(TextFieldValue()) }
+                // it is the checkbox
+                val checkBoxState = remember { mutableStateOf(false) }
+
+
                 Surface(shadowElevation = 3.dp) {
                     CenterAlignedTopAppBar(
                         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -181,8 +180,8 @@ fun HomeScreenApp() {
                         )
                     })
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    // it is the checkbox
-                    val checkBoxState = remember { mutableStateOf(false) }
+
+
                     Box(
                         modifier = Modifier
                             .padding(16.dp)
@@ -196,7 +195,8 @@ fun HomeScreenApp() {
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Check, contentDescription = "",
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "",
                             tint = if (checkBoxState.value) {
                                 Color.Gray
                             } else {
@@ -228,9 +228,8 @@ fun HomeScreenApp() {
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
-                        .alpha(1f),
+                        .alpha(if (checkBoxState.value && textState.value.text == "+375445555555") 1f else 0f),
                     shape = RoundedCornerShape(10)
-
                 ) {
                     Text(
                         text = "Continue".uppercase(),
