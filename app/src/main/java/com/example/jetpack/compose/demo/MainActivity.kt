@@ -1,7 +1,12 @@
 package com.example.jetpack.compose.demo
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -37,6 +42,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -144,11 +150,16 @@ fun HomeScreenApp() {
                         textState.value = it
                     },
                     trailingIcon = {
-                        Icon(Icons.Default.Clear,
-                            contentDescription = "clear text",
-                            modifier = Modifier.clickable {
-                                textState.value = TextFieldValue("")
-                            })
+                        if (textState.value.text.isNotBlank()) {
+                            Icon(Icons.Default.Clear,
+                                contentDescription = "clear text",
+                                modifier = Modifier.clickable {
+                                    textState.value = TextFieldValue("")
+                                })
+                        } else {
+                            null
+                        }
+
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -216,7 +227,8 @@ fun HomeScreenApp() {
                     onClick = { /*TODO*/ },
                     modifier = Modifier
                         .padding(16.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .alpha(1f),
                     shape = RoundedCornerShape(10)
 
                 ) {
@@ -226,7 +238,6 @@ fun HomeScreenApp() {
                         letterSpacing = 2.sp
                     )
                 }
-
             }
         },
     ) {  /* do something */ }
