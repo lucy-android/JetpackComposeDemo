@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -150,15 +150,17 @@ fun HomeScreenApp() {
                     },
                     trailingIcon = {
                         if (textState.value.text.isNotBlank()) {
-                            Icon(Icons.Default.Clear,
+                            Icon(
                                 contentDescription = "clear text",
+                                painter = painterResource(id = R.drawable.ic_close),
                                 modifier = Modifier.clickable {
                                     textState.value = TextFieldValue("")
-                                })
+                                },
+                                tint = Color.Unspecified,
+                            )
                         } else {
                             null
                         }
-
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -180,8 +182,6 @@ fun HomeScreenApp() {
                         )
                     })
                 Row(verticalAlignment = Alignment.CenterVertically) {
-
-
                     Box(
                         modifier = Modifier
                             .padding(16.dp)
