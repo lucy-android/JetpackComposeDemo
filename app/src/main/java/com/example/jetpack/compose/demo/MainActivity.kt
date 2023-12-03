@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -113,7 +114,7 @@ fun HomeScreenApp() {
                         ),
                         title = {
                             Text(
-                                "Log in",
+                                stringResource(R.string.log_in),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Bold,
@@ -137,7 +138,7 @@ fun HomeScreenApp() {
                 }
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-                    text = "Enter your phone number:",
+                    text = stringResource(R.string.enter_details),
                     fontWeight = FontWeight.Bold,
                     fontFamily = robotoFamily,
                     fontSize = 20.sp,
@@ -174,7 +175,7 @@ fun HomeScreenApp() {
                     singleLine = true,
                     placeholder = {
                         Text(
-                            "+375 (XX) XXX-XXX-XX",
+                            stringResource(R.string.placeholder_phone_number),
                             color = Color(0x80333333),
                             letterSpacing = 0.01.sp,
                             fontSize = 16.sp,
@@ -205,9 +206,9 @@ fun HomeScreenApp() {
                         )
                     }
                     HyperlinkText(
-                        fullText = "I agree with the processing of my \npersonal data.",
-                        linkText = listOf("personal data"),
-                        hyperlinks = listOf("https://loremipsum.io/privacy-policy/#:~:text=We%20may%20collect%20your%20IP,to%20improve%20your%20overall%20experience.")
+                        fullText = stringResource(R.string.personal_data_agreement),
+                        linkText = listOf(stringResource(R.string.personal_data)),
+                        hyperlinks = listOf(stringResource(R.string.privacy_policy))
                     )
                 }
 
@@ -217,9 +218,7 @@ fun HomeScreenApp() {
                             .fillMaxWidth()
                             .padding(top = 8.dp) // adding some space to the label
                             .background(
-                                color = Color(0x33333340),
-                                // rounded corner to match with the OutlinedTextField
-                                shape = RoundedCornerShape(4.dp)
+                                color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
                             )
                     )
                 }
@@ -228,11 +227,11 @@ fun HomeScreenApp() {
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
-                        .alpha(if (checkBoxState.value && textState.value.text == "+375445555555") 1f else 0f),
+                        .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
                     shape = RoundedCornerShape(10)
                 ) {
                     Text(
-                        text = "Continue".uppercase(),
+                        text = stringResource(R.string.continue_text).uppercase(),
                         fontFamily = robotoFamily,
                         letterSpacing = 2.sp
                     )
