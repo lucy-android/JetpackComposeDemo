@@ -276,21 +276,102 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecondScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
+        val textState = remember { mutableStateOf(TextFieldValue()) }
+        val checkBoxState = remember { mutableStateOf(false) }
+        Text(
+            modifier = Modifier.padding(bottom = 16.dp),
+            text = stringResource(R.string.enter_code),
+            fontWeight = FontWeight.Bold,
+            fontFamily = robotoFamily,
+            fontSize = 20.sp,
+            letterSpacing = 0.01.sp,
+            color = Color(0xFF333333)
+        )
+        TextField(
+            value = textState.value,
+            onValueChange = { textState.value = it },
 
+            trailingIcon = {
+                if (textState.value.text.isNotBlank()) {
+                    Icon(
+                        contentDescription = "clear text",
+                        painter = painterResource(id = R.drawable.ic_close),
+                        modifier = Modifier.clickable {
+                            textState.value = TextFieldValue("")
+                        },
+                        tint = Color.Unspecified,
+                    )
+                } else {
+                    null
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color(0x33333340), //hide the indicator
+                unfocusedIndicatorColor = Color(0x33333340),
+                cursorColor = Color(0x33333340)
+            ),
+            singleLine = true,
+            placeholder = {
+                Text(
+                    stringResource(R.string.placeholder_sms_code),
+                    color = Color(0x80333333),
+                    letterSpacing = 0.01.sp,
+                    fontSize = 16.sp,
+                    fontFamily = robotoFamily
+                )
+            })
+
+        Text(
+            text = stringResource(id = R.string.sent_code),
+            fontFamily = robotoFamily,
+            fontStyle = FontStyle.Normal,
+            fontSize = 16.sp,
+        )
+
+        Text(
+            text = stringResource(id = R.string.send_code),
+            fontFamily = robotoFamily,
+            fontStyle = FontStyle.Normal,
+            fontSize = 16.sp,
+        )
+
+        Row(modifier = Modifier.weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .background(
+                        color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
+                    )
+            )
+        }
+        Button(
+            onClick = { /* TODO */ },
+            modifier = Modifier
+                .padding(0.dp)
+                .fillMaxWidth()
+                .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
+            shape = RoundedCornerShape(10)
+        ) {
+            Text(
+                text = stringResource(R.string.continue_text).uppercase(),
+                fontFamily = robotoFamily,
+                letterSpacing = 2.sp
+            )
+        }
     }
-    Text(
-        modifier = Modifier.padding(8.dp),
-        text =
-        """
-                    This is the second screen
-                """.trimIndent(),
-    )
 }
 
 val robotoFamily = FontFamily(
