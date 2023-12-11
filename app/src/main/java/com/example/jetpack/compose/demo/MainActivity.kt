@@ -139,7 +139,7 @@ fun DemoApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = DemoRoutes.Start.name) {
-                StartScreen(innerPadding = innerPadding, onButtonClicked = {navController.navigate(DemoRoutes.Sms.name)})
+                StartScreen { navController.navigate(DemoRoutes.Sms.name) }
             }
 
             composable(route = DemoRoutes.Sms.name) {
@@ -182,29 +182,119 @@ fun GreetingPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StartScreen(onButtonClicked: () -> Unit, innerPadding: PaddingValues) {
+fun StartScreen(onButtonClicked: () -> Unit) {
     Column(
-        modifier = Modifier
-            .padding(innerPadding),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 16.dp),
+        verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
+        val textState = remember { mutableStateOf(TextFieldValue()) }
+        Column {
+            val checkBoxState = remember { mutableStateOf(false) }
+            Text(
+                modifier = Modifier.padding(bottom = 16.dp),
+                text = stringResource(R.string.enter_details),
+                fontWeight = FontWeight.Bold,
+                fontFamily = robotoFamily,
+                fontSize = 20.sp,
+                letterSpacing = 0.01.sp,
+                color = Color(0xFF333333)
+            )
+            TextField(
+                value = textState.value,
+                onValueChange = {
+                    textState.value = it
+                },
+                trailingIcon = {
+                    if (textState.value.text.isNotBlank()) {
+                        Icon(
+                            contentDescription = "clear text",
+                            painter = painterResource(id = R.drawable.ic_close),
+                            modifier = Modifier.clickable {
+                                textState.value = TextFieldValue("")
+                            },
+                            tint = Color.Unspecified,
+                        )
+                    } else {
+                        null
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 0.dp, 0.dp, 0.dp),
 
-    }
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color(0x33333340), //hide the indicator
+                    unfocusedIndicatorColor = Color(0x33333340),
+                    cursorColor = Color(0x33333340)
+                ),
+                singleLine = true,
+                placeholder = {
+                    Text(
+                        stringResource(R.string.placeholder_phone_number),
+                        color = Color(0x80333333),
+                        letterSpacing = 0.01.sp,
+                        fontSize = 16.sp,
+                        fontFamily = robotoFamily
+                    )
+                })
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(20))
+                        .size(20.dp)
+                        .background(Color(0xffcccccc))
+                        .padding(3.dp)
+                        .clip(RoundedCornerShape(20))
+                        .background(Color.White)
+                        .clickable { checkBoxState.value = !checkBoxState.value },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "",
+                        tint = if (checkBoxState.value) {
+                            Color.Gray
+                        } else {
+                            Color.Transparent
+                        }
+                    )
+                }
+                HyperlinkText(
+                    fullText = stringResource(R.string.personal_data_agreement),
+                    linkText = listOf(stringResource(R.string.personal_data)),
+                    hyperlinks = listOf(stringResource(R.string.privacy_policy))
+                )
+            }
 
-
-    Button(modifier = Modifier.padding(6.dp), onClick = {
-        onButtonClicked.invoke()
-
-    }) {
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text =
-            """
-                    This is the first screen
-                """.trimIndent(),
-        )
-
+            Row(modifier = Modifier.weight(1f)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp) // adding some space to the label
+                        .background(
+                            color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
+                        )
+                )
+            }
+            Button(
+                onClick = { onButtonClicked.invoke() },
+                modifier = Modifier
+                    .padding(0.dp)
+                    .fillMaxWidth()
+                    .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
+                shape = RoundedCornerShape(10)
+            ) {
+                Text(
+                    text = stringResource(R.string.continue_text).uppercase(),
+                    fontFamily = robotoFamily,
+                    letterSpacing = 2.sp
+                )
+            }
+        }
     }
 }
 
@@ -224,158 +314,6 @@ fun SecondScreen(innerPadding: PaddingValues) {
                     This is the second screen
                 """.trimIndent(),
     )
-}
-
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeScreenApp() {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val textState = remember { mutableStateOf(TextFieldValue()) }
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-
-        topBar = {
-            Column {
-                // it is the checkbox
-                val checkBoxState = remember { mutableStateOf(false) }
-
-
-                Surface(shadowElevation = 3.dp) {
-                    CenterAlignedTopAppBar(
-                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                            titleContentColor = MaterialTheme.colorScheme.secondary,
-                        ),
-                        title = {
-                            Text(
-                                stringResource(R.string.log_in),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                                fontFamily = robotoFamily,
-                                letterSpacing = 0.01.sp,
-                                color = Color(0xFF212121)
-                            )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { /* do something */ }) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = "Localized description"
-                                )
-                            }
-                        },
-                        actions = {/* do something */ },
-                        scrollBehavior = scrollBehavior,
-                    )
-                }
-                Text(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-                    text = stringResource(R.string.enter_details),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = robotoFamily,
-                    fontSize = 20.sp,
-                    letterSpacing = 0.01.sp,
-                    color = Color(0xFF333333)
-                )
-                TextField(value = textState.value,
-                    onValueChange = {
-                        textState.value = it
-                    },
-                    trailingIcon = {
-                        if (textState.value.text.isNotBlank()) {
-                            Icon(
-                                contentDescription = "clear text",
-                                painter = painterResource(id = R.drawable.ic_close),
-                                modifier = Modifier.clickable {
-                                    textState.value = TextFieldValue("")
-                                },
-                                tint = Color.Unspecified,
-                            )
-                        } else {
-                            null
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color(0x33333340), //hide the indicator
-                        unfocusedIndicatorColor = Color(0x33333340),
-                        cursorColor = Color(0x33333340)
-                    ),
-                    singleLine = true,
-                    placeholder = {
-                        Text(
-                            stringResource(R.string.placeholder_phone_number),
-                            color = Color(0x80333333),
-                            letterSpacing = 0.01.sp,
-                            fontSize = 16.sp,
-                            fontFamily = robotoFamily
-                        )
-                    })
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(20))
-                            .size(20.dp)
-                            .background(Color(0xffcccccc))
-                            .padding(3.dp)
-                            .clip(RoundedCornerShape(20))
-                            .background(Color.White)
-                            .clickable { checkBoxState.value = !checkBoxState.value },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "",
-                            tint = if (checkBoxState.value) {
-                                Color.Gray
-                            } else {
-                                Color.Transparent
-                            }
-                        )
-                    }
-                    HyperlinkText(
-                        fullText = stringResource(R.string.personal_data_agreement),
-                        linkText = listOf(stringResource(R.string.personal_data)),
-                        hyperlinks = listOf(stringResource(R.string.privacy_policy))
-                    )
-                }
-
-                Row(modifier = Modifier.weight(1f)) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp) // adding some space to the label
-                            .background(
-                                color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
-                            )
-                    )
-                }
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                        .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
-                    shape = RoundedCornerShape(10)
-                ) {
-                    Text(
-                        text = stringResource(R.string.continue_text).uppercase(),
-                        fontFamily = robotoFamily,
-                        letterSpacing = 2.sp
-                    )
-                }
-            }
-        },
-    ) {  /* do something */ }
 }
 
 val robotoFamily = FontFamily(
