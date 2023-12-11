@@ -9,7 +9,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,7 +78,6 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    // HomeScreenApp()
                     DemoApp()
                 }
             }
@@ -139,11 +137,11 @@ fun DemoApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = DemoRoutes.Start.name) {
-                StartScreen { navController.navigate(DemoRoutes.Sms.name) }
+                StartScreen(modifier = Modifier.padding(16.dp)) { navController.navigate(DemoRoutes.Sms.name) }
             }
 
             composable(route = DemoRoutes.Sms.name) {
-                SecondScreen(innerPadding = innerPadding)
+                SecondScreen(modifier = Modifier.padding(16.dp))
             }
         }
     }
@@ -167,9 +165,9 @@ fun GreetingPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StartScreen(onButtonClicked: () -> Unit) {
+fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
     Column(
-        modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 16.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         val textState = remember { mutableStateOf(TextFieldValue()) }
@@ -185,9 +183,8 @@ fun StartScreen(onButtonClicked: () -> Unit) {
         )
         TextField(
             value = textState.value,
-            onValueChange = {
-                textState.value = it
-            },
+            onValueChange = { textState.value = it },
+
             trailingIcon = {
                 if (textState.value.text.isNotBlank()) {
                     Icon(
@@ -204,7 +201,7 @@ fun StartScreen(onButtonClicked: () -> Unit) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(0.dp, 0.dp, 0.dp, 0.dp),
+                .padding(bottom = 16.dp),
 
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.Transparent,
@@ -225,7 +222,7 @@ fun StartScreen(onButtonClicked: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(end = 16.dp)
                     .clip(RoundedCornerShape(20))
                     .size(20.dp)
                     .background(Color(0xffcccccc))
@@ -256,7 +253,7 @@ fun StartScreen(onButtonClicked: () -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp) // adding some space to the label
+                    .padding(top = 8.dp)
                     .background(
                         color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
                     )
@@ -280,10 +277,9 @@ fun StartScreen(onButtonClicked: () -> Unit) {
 }
 
 @Composable
-fun SecondScreen(innerPadding: PaddingValues) {
+fun SecondScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
-            .padding(innerPadding),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
 
