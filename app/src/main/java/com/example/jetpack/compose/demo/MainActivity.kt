@@ -6,8 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,7 +59,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.jetpack.compose.demo.ui.theme.JetpackComposeDemoTheme
+
+enum class DemoRoutes {
+    Start,
+    Sms
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,12 +79,93 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreenApp()
+                    // HomeScreenApp()
+                    DemoApp()
                 }
             }
         }
     }
 }
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DemoApp(
+    navController: NavHostController = rememberNavController()
+) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+
+        topBar = {
+            Column {
+                Surface(shadowElevation = 3.dp) {
+                    CenterAlignedTopAppBar(
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            titleContentColor = MaterialTheme.colorScheme.secondary,
+                        ),
+                        title = {
+                            Text(
+                                stringResource(R.string.log_in),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                fontFamily = robotoFamily,
+                                letterSpacing = 0.01.sp,
+                                color = Color(0xFF212121)
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { /* do something */ }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = "Localized description"
+                                )
+                            }
+                        },
+                        actions = {/* do something */ },
+                        scrollBehavior = scrollBehavior,
+                    )
+                }
+            }
+        },
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = DemoRoutes.Start.name,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(route = DemoRoutes.Start.name) {
+                StartScreen(innerPadding = innerPadding, onButtonClicked = {navController.navigate(DemoRoutes.Sms.name)})
+            }
+
+            composable(route = DemoRoutes.Sms.name) {
+                SecondScreen(innerPadding = innerPadding)
+            }
+        }
+        /* Column(
+            modifier = Modifier
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+
+        }
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text =
+                """
+                    This is an example of a scaffold. It uses the Scaffold composable's parameters to create a screen with a simple top app bar, bottom app bar, and floating action button.
+
+                    It also contains some basic inner content, such as this text.
+                """.trimIndent(),
+            )
+        }*/
+    }
+}
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -89,6 +181,51 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
+
+@Composable
+fun StartScreen(onButtonClicked: () -> Unit, innerPadding: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .padding(innerPadding),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+
+    }
+
+
+    Button(modifier = Modifier.padding(6.dp), onClick = {
+        onButtonClicked.invoke()
+
+    }) {
+        Text(
+            modifier = Modifier.padding(8.dp),
+            text =
+            """
+                    This is the first screen
+                """.trimIndent(),
+        )
+
+    }
+}
+
+@Composable
+fun SecondScreen(innerPadding: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .padding(innerPadding),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+
+    }
+    Text(
+        modifier = Modifier.padding(8.dp),
+        text =
+        """
+                    This is the second screen
+                """.trimIndent(),
+    )
+}
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
