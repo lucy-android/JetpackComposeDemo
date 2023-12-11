@@ -146,23 +146,6 @@ fun DemoApp(
                 SecondScreen(innerPadding = innerPadding)
             }
         }
-        /* Column(
-            modifier = Modifier
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-
-        }
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text =
-                """
-                    This is an example of a scaffold. It uses the Scaffold composable's parameters to create a screen with a simple top app bar, bottom app bar, and floating action button.
-
-                    It also contains some basic inner content, such as this text.
-                """.trimIndent(),
-            )
-        }*/
     }
 }
 
@@ -190,110 +173,108 @@ fun StartScreen(onButtonClicked: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        Column {
-            val checkBoxState = remember { mutableStateOf(false) }
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp),
-                text = stringResource(R.string.enter_details),
-                fontWeight = FontWeight.Bold,
-                fontFamily = robotoFamily,
-                fontSize = 20.sp,
-                letterSpacing = 0.01.sp,
-                color = Color(0xFF333333)
-            )
-            TextField(
-                value = textState.value,
-                onValueChange = {
-                    textState.value = it
-                },
-                trailingIcon = {
-                    if (textState.value.text.isNotBlank()) {
-                        Icon(
-                            contentDescription = "clear text",
-                            painter = painterResource(id = R.drawable.ic_close),
-                            modifier = Modifier.clickable {
-                                textState.value = TextFieldValue("")
-                            },
-                            tint = Color.Unspecified,
-                        )
-                    } else {
-                        null
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 0.dp),
-
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedIndicatorColor = Color(0x33333340), //hide the indicator
-                    unfocusedIndicatorColor = Color(0x33333340),
-                    cursorColor = Color(0x33333340)
-                ),
-                singleLine = true,
-                placeholder = {
-                    Text(
-                        stringResource(R.string.placeholder_phone_number),
-                        color = Color(0x80333333),
-                        letterSpacing = 0.01.sp,
-                        fontSize = 16.sp,
-                        fontFamily = robotoFamily
-                    )
-                })
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .clip(RoundedCornerShape(20))
-                        .size(20.dp)
-                        .background(Color(0xffcccccc))
-                        .padding(3.dp)
-                        .clip(RoundedCornerShape(20))
-                        .background(Color.White)
-                        .clickable { checkBoxState.value = !checkBoxState.value },
-                    contentAlignment = Alignment.Center,
-                ) {
+        val checkBoxState = remember { mutableStateOf(false) }
+        Text(
+            modifier = Modifier.padding(bottom = 16.dp),
+            text = stringResource(R.string.enter_details),
+            fontWeight = FontWeight.Bold,
+            fontFamily = robotoFamily,
+            fontSize = 20.sp,
+            letterSpacing = 0.01.sp,
+            color = Color(0xFF333333)
+        )
+        TextField(
+            value = textState.value,
+            onValueChange = {
+                textState.value = it
+            },
+            trailingIcon = {
+                if (textState.value.text.isNotBlank()) {
                     Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = "",
-                        tint = if (checkBoxState.value) {
-                            Color.Gray
-                        } else {
-                            Color.Transparent
-                        }
+                        contentDescription = "clear text",
+                        painter = painterResource(id = R.drawable.ic_close),
+                        modifier = Modifier.clickable {
+                            textState.value = TextFieldValue("")
+                        },
+                        tint = Color.Unspecified,
                     )
+                } else {
+                    null
                 }
-                HyperlinkText(
-                    fullText = stringResource(R.string.personal_data_agreement),
-                    linkText = listOf(stringResource(R.string.personal_data)),
-                    hyperlinks = listOf(stringResource(R.string.privacy_policy))
-                )
-            }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 0.dp, 0.dp, 0.dp),
 
-            Row(modifier = Modifier.weight(1f)) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp) // adding some space to the label
-                        .background(
-                            color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
-                        )
-                )
-            }
-            Button(
-                onClick = { onButtonClicked.invoke() },
-                modifier = Modifier
-                    .padding(0.dp)
-                    .fillMaxWidth()
-                    .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
-                shape = RoundedCornerShape(10)
-            ) {
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color(0x33333340), //hide the indicator
+                unfocusedIndicatorColor = Color(0x33333340),
+                cursorColor = Color(0x33333340)
+            ),
+            singleLine = true,
+            placeholder = {
                 Text(
-                    text = stringResource(R.string.continue_text).uppercase(),
-                    fontFamily = robotoFamily,
-                    letterSpacing = 2.sp
+                    stringResource(R.string.placeholder_phone_number),
+                    color = Color(0x80333333),
+                    letterSpacing = 0.01.sp,
+                    fontSize = 16.sp,
+                    fontFamily = robotoFamily
+                )
+            })
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .clip(RoundedCornerShape(20))
+                    .size(20.dp)
+                    .background(Color(0xffcccccc))
+                    .padding(3.dp)
+                    .clip(RoundedCornerShape(20))
+                    .background(Color.White)
+                    .clickable { checkBoxState.value = !checkBoxState.value },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = "",
+                    tint = if (checkBoxState.value) {
+                        Color.Gray
+                    } else {
+                        Color.Transparent
+                    }
                 )
             }
+            HyperlinkText(
+                fullText = stringResource(R.string.personal_data_agreement),
+                linkText = listOf(stringResource(R.string.personal_data)),
+                hyperlinks = listOf(stringResource(R.string.privacy_policy))
+            )
+        }
+
+        Row(modifier = Modifier.weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp) // adding some space to the label
+                    .background(
+                        color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
+                    )
+            )
+        }
+        Button(
+            onClick = { onButtonClicked.invoke() },
+            modifier = Modifier
+                .padding(0.dp)
+                .fillMaxWidth()
+                .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
+            shape = RoundedCornerShape(10)
+        ) {
+            Text(
+                text = stringResource(R.string.continue_text).uppercase(),
+                fontFamily = robotoFamily,
+                letterSpacing = 2.sp
+            )
         }
     }
 }
