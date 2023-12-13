@@ -2,6 +2,8 @@ package com.example.jetpack.compose.demo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -34,8 +36,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -68,8 +72,7 @@ import com.example.jetpack.compose.demo.ui.theme.JetpackComposeDemoTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 enum class DemoRoutes {
-    Start,
-    Sms
+    Start, Sms
 }
 
 class MainActivity : ComponentActivity() {
@@ -184,9 +187,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
             letterSpacing = 0.01.sp,
             color = Color(0xFF333333)
         )
-        TextField(
-            value = textState.value,
-            onValueChange = { textState.value = it },
+        TextField(value = textState.value, onValueChange = { textState.value = it },
 
             trailingIcon = {
                 if (textState.value.text.isNotBlank()) {
@@ -201,8 +202,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
                 } else {
                     null
                 }
-            },
-            modifier = Modifier
+            }, modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
 
@@ -211,9 +211,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
                 focusedIndicatorColor = Color(0x33333340), //hide the indicator
                 unfocusedIndicatorColor = Color(0x33333340),
                 cursorColor = Color(0x33333340)
-            ),
-            singleLine = true,
-            placeholder = {
+            ), singleLine = true, placeholder = {
                 Text(
                     stringResource(R.string.placeholder_phone_number),
                     color = Color(0x80333333),
@@ -281,9 +279,28 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SecondScreen(modifier: Modifier = Modifier,
-                 viewModel: CountDownViewModel = viewModel()) {
-    viewModel.startCountDown()
+fun SecondScreen(
+    modifier: Modifier = Modifier, viewModel: CountDownViewModel = viewModel()
+) {
+    var setView: String by remember {
+        mutableStateOf("")
+    }
+    object : CountDownTimer(10000, 1000) {
+        override fun onTick(p0: Long) {
+            Log.d("APP_TAG", "onTick: $p0")
+
+            var previousNumber = 10
+            while (previousNumber - p0.toInt() / 1000 > 0) {
+                previousNumber = p0.toInt() / 1000
+                setView = "${p0.toInt()/1000}"
+            }
+        }
+
+        override fun onFinish() {
+            setView = "0"
+        }
+
+    }.start()
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -293,16 +310,14 @@ fun SecondScreen(modifier: Modifier = Modifier,
         val countDownTimerState = viewModel.countdownValue.collectAsState()
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
-            text = /*stringResource(R.string.enter_code)*/countDownTimerState.value.toString(),
+            text = /*stringResource(R.string.enter_code)*/setView,
             fontWeight = FontWeight.Bold,
             fontFamily = robotoFamily,
             fontSize = 20.sp,
             letterSpacing = 0.01.sp,
             color = Color(0xFF333333)
         )
-        TextField(
-            value = textState.value,
-            onValueChange = { textState.value = it },
+        TextField(value = textState.value, onValueChange = { textState.value = it },
 
             trailingIcon = {
                 if (textState.value.text.isNotBlank()) {
@@ -317,8 +332,7 @@ fun SecondScreen(modifier: Modifier = Modifier,
                 } else {
                     null
                 }
-            },
-            modifier = Modifier
+            }, modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
 
@@ -327,9 +341,7 @@ fun SecondScreen(modifier: Modifier = Modifier,
                 focusedIndicatorColor = Color(0x33333340), //hide the indicator
                 unfocusedIndicatorColor = Color(0x33333340),
                 cursorColor = Color(0x33333340)
-            ),
-            singleLine = true,
-            placeholder = {
+            ), singleLine = true, placeholder = {
                 Text(
                     stringResource(R.string.placeholder_sms_code),
                     color = Color(0x80333333),
