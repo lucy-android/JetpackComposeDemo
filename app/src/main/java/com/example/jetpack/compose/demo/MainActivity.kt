@@ -35,6 +35,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +71,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.jetpack.compose.demo.ui.CountDownViewModel
 import com.example.jetpack.compose.demo.ui.theme.JetpackComposeDemoTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
 
 enum class DemoRoutes {
     Start, Sms
@@ -282,35 +284,22 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
 fun SecondScreen(
     modifier: Modifier = Modifier, viewModel: CountDownViewModel = viewModel()
 ) {
-    var setView: String by remember {
-        mutableStateOf("")
+    var setView by remember { mutableStateOf(60) }
+    LaunchedEffect(key1 = setView) {
+        if (setView > 0) {
+            delay(1_000)
+            setView -= 1
+        }
     }
-    object : CountDownTimer(10000, 1000) {
-        override fun onTick(p0: Long) {
-            Log.d("APP_TAG", "onTick: $p0")
-
-            var previousNumber = 10
-            while (previousNumber - p0.toInt() / 1000 > 0) {
-                previousNumber = p0.toInt() / 1000
-                setView = "${p0.toInt()/1000}"
-            }
-        }
-
-        override fun onFinish() {
-            setView = "0"
-        }
-
-    }.start()
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         val textState = remember { mutableStateOf(TextFieldValue()) }
         val checkBoxState = remember { mutableStateOf(false) }
-        val countDownTimerState = viewModel.countdownValue.collectAsState()
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
-            text = /*stringResource(R.string.enter_code)*/setView,
+            text = /*stringResource(R.string.enter_code)*/setView.toString(),
             fontWeight = FontWeight.Bold,
             fontFamily = robotoFamily,
             fontSize = 20.sp,
