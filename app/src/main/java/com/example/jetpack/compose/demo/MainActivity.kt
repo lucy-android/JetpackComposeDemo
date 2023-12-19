@@ -2,8 +2,6 @@ package com.example.jetpack.compose.demo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -47,6 +45,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -299,7 +298,7 @@ fun SecondScreen(
         val checkBoxState = remember { mutableStateOf(false) }
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
-            text = /*stringResource(R.string.enter_code)*/setView.toString(),
+            text = stringResource(R.string.enter_code),
             fontWeight = FontWeight.Bold,
             fontFamily = robotoFamily,
             fontSize = 20.sp,
@@ -348,7 +347,7 @@ fun SecondScreen(
         )
 
         Text(
-            text = stringResource(id = R.string.send_code),
+            text = stringResource(id = R.string.send_code, setView),
             fontFamily = robotoFamily,
             fontStyle = FontStyle.Normal,
             fontSize = 16.sp,
