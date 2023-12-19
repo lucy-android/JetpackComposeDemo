@@ -125,7 +125,7 @@ fun DemoApp(
                             )
                         },
                         navigationIcon = {
-                            IconButton(onClick = { /* do something */ }) {
+                            IconButton(onClick = { navController.navigate(DemoRoutes.Start.name) }) {
                                 Icon(
                                     imageVector = Icons.Filled.ArrowBack,
                                     contentDescription = "Localized description"
