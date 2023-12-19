@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -179,6 +180,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
     ) {
         val textState = remember { mutableStateOf(TextFieldValue()) }
         val checkBoxState = remember { mutableStateOf(false) }
+
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
             text = stringResource(R.string.enter_details),
@@ -290,6 +292,7 @@ fun SecondScreen(
             setView -= 1
         }
     }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -339,8 +342,20 @@ fun SecondScreen(
                 )
             })
 
+        val placeholder = "+375 44 555 55 55"
+
+        val globalText = stringResource(id = R.string.sent_code, placeholder)
+
+        val start = globalText.indexOf(placeholder)
+        val spanStyles = listOf(
+            AnnotatedString.Range(SpanStyle(fontWeight = FontWeight.Bold),
+                start = start,
+                end = start + placeholder.length
+            )
+        )
+
         Text(
-            text = stringResource(id = R.string.sent_code),
+            text = AnnotatedString(text = globalText, spanStyles = spanStyles),
             fontFamily = robotoFamily,
             fontStyle = FontStyle.Normal,
             fontSize = 16.sp,
