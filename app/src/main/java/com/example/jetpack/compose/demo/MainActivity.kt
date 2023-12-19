@@ -361,8 +361,20 @@ fun SecondScreen(
             fontSize = 16.sp,
         )
 
+        val placeholder2 = setView.toString()
+
+        val globalText2 = stringResource(id = R.string.send_code, placeholder2)
+
+        val start2 = globalText2.indexOf(placeholder2)
+        val spanStyles2 = listOf(
+            AnnotatedString.Range(SpanStyle(fontWeight = FontWeight.Bold),
+                start = start2,
+                end = start2 + placeholder2.length
+            )
+        )
+
         Text(
-            text = stringResource(id = R.string.send_code, setView),
+            text = AnnotatedString(text = globalText2, spanStyles = spanStyles2),
             fontFamily = robotoFamily,
             fontStyle = FontStyle.Normal,
             fontSize = 16.sp,
