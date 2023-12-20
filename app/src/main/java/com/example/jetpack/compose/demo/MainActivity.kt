@@ -34,7 +34,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +44,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -71,6 +69,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.jetpack.compose.demo.ui.CountDownViewModel
 import com.example.jetpack.compose.demo.ui.theme.JetpackComposeDemoTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import kotlinx.coroutines.delay
 
 enum class DemoRoutes {
@@ -144,12 +144,16 @@ fun DemoApp(
             startDestination = DemoRoutes.Start.name,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = DemoRoutes.Start.name) {
-                StartScreen(modifier = Modifier.padding(16.dp)) { navController.navigate(DemoRoutes.Sms.name) }
+            composable(route = DemoRoutes.Start.name, arguments = listOf(navArgument("phoneNumber") { type = NavType.StringType })) {
+                StartScreen(modifier = Modifier.padding(16.dp)) { arg -> navController.navigate("${DemoRoutes.Sms.name}/$arg") }
             }
 
-            composable(route = DemoRoutes.Sms.name) {
-                SecondScreen(modifier = Modifier.padding(16.dp))
+            composable(route = "${DemoRoutes.Sms.name}/{phoneNumber}") { navBackStackEntry ->
+                val phoneNumber = navBackStackEntry.arguments?.getString("phoneNumber")
+                phoneNumber?.let { number ->
+                    SecondScreen(modifier = Modifier.padding(16.dp), phoneNumber = number)
+                }
+
             }
         }
     }
@@ -173,7 +177,7 @@ fun GreetingPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
+fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -264,7 +268,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
             )
         }
         Button(
-            onClick = { onButtonClicked.invoke() },
+            onClick = { onButtonClicked.invoke(textState.value.text) },
             modifier = Modifier
                 .padding(0.dp)
                 .fillMaxWidth()
@@ -283,8 +287,10 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecondScreen(
-    modifier: Modifier = Modifier, viewModel: CountDownViewModel = viewModel()
+    modifier: Modifier = Modifier, viewModel: CountDownViewModel = viewModel(), phoneNumber: String
 ) {
+
+   // Log.d("APP_TAG", "phoneNumber: $phoneNumber")
     var setView by remember { mutableStateOf(60) }
     LaunchedEffect(key1 = setView) {
         if (setView > 0) {
@@ -342,16 +348,14 @@ fun SecondScreen(
                 )
             })
 
-        val placeholder = "+375 44 555 55 55"
+        val globalText = stringResource(id = R.string.sent_code, phoneNumber)
 
-        val globalText = stringResource(id = R.string.sent_code, placeholder)
-
-        val start = globalText.indexOf(placeholder)
+        val start = globalText.indexOf(phoneNumber)
         val spanStyles = listOf(
             AnnotatedString.Range(
                 SpanStyle(fontWeight = FontWeight.Bold),
                 start = start,
-                end = start + placeholder.length
+                end = start + phoneNumber.length
             )
         )
 
