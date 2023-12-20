@@ -268,7 +268,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: () -> Unit) {
             modifier = Modifier
                 .padding(0.dp)
                 .fillMaxWidth()
-                .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
+                .alpha(if (checkBoxState.value && textState.value.text.matches(Regex("^[+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}\$"))) 1f else 0f),
             shape = RoundedCornerShape(10)
         ) {
             Text(
@@ -348,7 +348,8 @@ fun SecondScreen(
 
         val start = globalText.indexOf(placeholder)
         val spanStyles = listOf(
-            AnnotatedString.Range(SpanStyle(fontWeight = FontWeight.Bold),
+            AnnotatedString.Range(
+                SpanStyle(fontWeight = FontWeight.Bold),
                 start = start,
                 end = start + placeholder.length
             )
@@ -367,7 +368,8 @@ fun SecondScreen(
 
         val start2 = globalText2.indexOf(placeholder2)
         val spanStyles2 = listOf(
-            AnnotatedString.Range(SpanStyle(fontWeight = FontWeight.Bold),
+            AnnotatedString.Range(
+                SpanStyle(fontWeight = FontWeight.Bold),
                 start = start2,
                 end = start2 + placeholder2.length
             )
