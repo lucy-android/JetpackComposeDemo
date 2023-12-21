@@ -144,7 +144,7 @@ fun DemoApp(
             startDestination = DemoRoutes.Start.name,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = DemoRoutes.Start.name, arguments = listOf(navArgument("phoneNumber") { type = NavType.StringType })) {
+            composable(route = DemoRoutes.Start.name) {
                 StartScreen(modifier = Modifier.padding(16.dp)) { arg -> navController.navigate("${DemoRoutes.Sms.name}/$arg") }
             }
 
@@ -153,7 +153,6 @@ fun DemoApp(
                 phoneNumber?.let { number ->
                     SecondScreen(modifier = Modifier.padding(16.dp), phoneNumber = number)
                 }
-
             }
         }
     }
