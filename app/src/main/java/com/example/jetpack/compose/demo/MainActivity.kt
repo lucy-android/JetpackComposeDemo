@@ -289,7 +289,7 @@ fun SecondScreen(
     modifier: Modifier = Modifier, viewModel: CountDownViewModel = viewModel(), phoneNumber: String
 ) {
 
-   // Log.d("APP_TAG", "phoneNumber: $phoneNumber")
+    // Log.d("APP_TAG", "phoneNumber: $phoneNumber")
     var setView by remember { mutableStateOf(60) }
     LaunchedEffect(key1 = setView) {
         if (setView > 0) {
@@ -378,8 +378,16 @@ fun SecondScreen(
             )
         )
 
+        val spanStyles3 = SpanStyle(
+                color = Color(0xFF614DDF),)
+
         Text(
-            text = AnnotatedString(text = globalText2, spanStyles = spanStyles2),
+            text = if (setView > 0) AnnotatedString(
+                text = globalText2, spanStyles = spanStyles2
+            ) else AnnotatedString(
+                text = stringResource(id = R.string.send_another_code),
+                spanStyle = spanStyles3
+            ),
             fontFamily = robotoFamily,
             fontStyle = FontStyle.Normal,
             fontSize = 16.sp,

@@ -5,6 +5,7 @@
     <string name="enter_code">Enter the SMS code:</string>
     <string name="sent_code">We sent the code to the number %s</string>
     <string name="send_code">We can send another code in %s s</string>
+    <string name="send_another_code">Send another code</string>
     <string name="placeholder_phone_number">+375 (XX) XXX-XXX-XX</string>
     <string name="placeholder_sms_code">XX XX XX</string>
     <string name="personal_data_agreement">I agree with the processing of my \npersonal data.</string>
