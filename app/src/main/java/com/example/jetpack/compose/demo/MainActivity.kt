@@ -56,6 +56,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -313,39 +314,7 @@ fun SecondScreen(
             letterSpacing = 0.01.sp,
             color = Color(0xFF333333)
         )
-        TextField(value = textState.value, onValueChange = { textState.value = it },
 
-            trailingIcon = {
-                if (textState.value.text.isNotBlank()) {
-                    Icon(
-                        contentDescription = "clear text",
-                        painter = painterResource(id = R.drawable.ic_close),
-                        modifier = Modifier.clickable {
-                            textState.value = TextFieldValue("")
-                        },
-                        tint = Color.Unspecified,
-                    )
-                } else {
-                    null
-                }
-            }, modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color.Transparent,
-                focusedIndicatorColor = Color(0x33333340), //hide the indicator
-                unfocusedIndicatorColor = Color(0x33333340),
-                cursorColor = Color(0x33333340)
-            ), singleLine = true, placeholder = {
-                Text(
-                    stringResource(R.string.placeholder_sms_code),
-                    color = Color(0x80333333),
-                    letterSpacing = 0.01.sp,
-                    fontSize = 16.sp,
-                    fontFamily = robotoFamily
-                )
-            })
 
         val globalText = stringResource(id = R.string.sent_code, phoneNumber)
 
@@ -356,13 +325,6 @@ fun SecondScreen(
                 start = start,
                 end = start + phoneNumber.length
             )
-        )
-
-        Text(
-            text = AnnotatedString(text = globalText, spanStyles = spanStyles),
-            fontFamily = robotoFamily,
-            fontStyle = FontStyle.Normal,
-            fontSize = 16.sp,
         )
 
         val placeholder2 = setView.toString()
@@ -379,19 +341,66 @@ fun SecondScreen(
         )
 
         val spanStyles3 = SpanStyle(
-                color = Color(0xFF614DDF),)
+            color = Color(0xFF614DDF),)
 
-        Text(
-            text = if (setView > 0) AnnotatedString(
-                text = globalText2, spanStyles = spanStyles2
-            ) else AnnotatedString(
-                text = stringResource(id = R.string.send_another_code),
-                spanStyle = spanStyles3
-            ),
-            fontFamily = robotoFamily,
-            fontStyle = FontStyle.Normal,
-            fontSize = 16.sp,
-        )
+        Column(modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            TextField(value = textState.value, onValueChange = { textState.value = it },
+
+                trailingIcon = {
+                    if (textState.value.text.isNotBlank()) {
+                        Icon(
+                            contentDescription = "clear text",
+                            painter = painterResource(id = R.drawable.ic_close),
+                            modifier = Modifier.clickable {
+                                textState.value = TextFieldValue("")
+                            },
+                            tint = Color.Unspecified,
+                        )
+                    } else {
+                        null
+                    }
+                }, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color(0x33333340), //hide the indicator
+                    unfocusedIndicatorColor = Color(0x33333340),
+                    cursorColor = Color(0x33333340)
+                ), singleLine = true, placeholder = {
+                    Text(
+                        stringResource(R.string.placeholder_sms_code),
+                        color = Color(0x80333333),
+                        letterSpacing = 0.01.sp,
+                        fontSize = 16.sp,
+                        fontFamily = robotoFamily
+                    )
+                })
+            Text(
+                text = AnnotatedString(text = globalText, spanStyles = spanStyles),
+                fontFamily = robotoFamily,
+                fontStyle = FontStyle.Normal,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = if (setView > 0) AnnotatedString(
+                    text = globalText2, spanStyles = spanStyles2
+                ) else AnnotatedString(
+                    text = stringResource(id = R.string.send_another_code),
+                    spanStyle = spanStyles3
+                ),
+                fontFamily = robotoFamily,
+                fontStyle = FontStyle.Normal,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+
+
 
         Row(modifier = Modifier.weight(1f)) {
             Box(
