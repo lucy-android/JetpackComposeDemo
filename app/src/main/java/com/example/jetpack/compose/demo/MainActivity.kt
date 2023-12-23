@@ -290,7 +290,6 @@ fun SecondScreen(
     modifier: Modifier = Modifier, viewModel: CountDownViewModel = viewModel(), phoneNumber: String
 ) {
 
-    // Log.d("APP_TAG", "phoneNumber: $phoneNumber")
     var setView by remember { mutableStateOf(60) }
     LaunchedEffect(key1 = setView) {
         if (setView > 0) {
@@ -304,7 +303,6 @@ fun SecondScreen(
         verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        val checkBoxState = remember { mutableStateOf(false) }
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
             text = stringResource(R.string.enter_code),
@@ -341,10 +339,13 @@ fun SecondScreen(
         )
 
         val spanStyles3 = SpanStyle(
-            color = Color(0xFF614DDF),)
+            color = Color(0xFF614DDF),
+        )
 
-        Column(modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             TextField(value = textState.value, onValueChange = { textState.value = it },
 
                 trailingIcon = {
@@ -390,8 +391,7 @@ fun SecondScreen(
                 text = if (setView > 0) AnnotatedString(
                     text = globalText2, spanStyles = spanStyles2
                 ) else AnnotatedString(
-                    text = stringResource(id = R.string.send_another_code),
-                    spanStyle = spanStyles3
+                    text = stringResource(id = R.string.send_another_code), spanStyle = spanStyles3
                 ),
                 fontFamily = robotoFamily,
                 fontStyle = FontStyle.Normal,
@@ -417,7 +417,7 @@ fun SecondScreen(
             modifier = Modifier
                 .padding(0.dp)
                 .fillMaxWidth()
-                .alpha(if (checkBoxState.value && textState.value.text == stringResource(R.string.phone_number)) 1f else 0f),
+                .alpha(if (textState.value.text.matches(Regex("^[0-9]{6}\$"))) 1f else 0f),
             shape = RoundedCornerShape(10)
         ) {
             Text(
