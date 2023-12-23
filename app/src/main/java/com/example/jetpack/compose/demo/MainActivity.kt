@@ -215,7 +215,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit
 
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.Transparent,
-                focusedIndicatorColor = Color(0x33333340), //hide the indicator
+                focusedIndicatorColor = Color(0x55614DDF),
                 unfocusedIndicatorColor = Color(0x33333340),
                 cursorColor = Color(0x33333340)
             ), singleLine = true, placeholder = {
@@ -367,7 +367,7 @@ fun SecondScreen(
 
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
-                    focusedIndicatorColor = Color(0x33333340), //hide the indicator
+                    focusedIndicatorColor = Color(0x55614DDF),
                     unfocusedIndicatorColor = Color(0x33333340),
                     cursorColor = Color(0x33333340)
                 ), singleLine = true, placeholder = {
