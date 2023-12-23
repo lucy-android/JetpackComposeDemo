@@ -319,7 +319,12 @@ fun SecondScreen(
         val start = globalText.indexOf(phoneNumber)
         val spanStyles = listOf(
             AnnotatedString.Range(
-                SpanStyle(fontWeight = FontWeight.Bold),
+                SpanStyle(fontWeight = FontWeight.Normal, color = Color(0xFFBDBDBD), fontSize = 16.sp),
+                start = 0,
+                end = start - 1
+            ),
+            AnnotatedString.Range(
+                SpanStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp),
                 start = start,
                 end = start + phoneNumber.length
             )
@@ -331,6 +336,11 @@ fun SecondScreen(
 
         val start2 = globalText2.indexOf(placeholder2)
         val spanStyles2 = listOf(
+            AnnotatedString.Range(
+                SpanStyle(fontWeight = FontWeight.Normal, color = Color(0xFFBDBDBD), fontSize = 16.sp),
+                start = 0,
+                end = start2 - 1
+            ),
             AnnotatedString.Range(
                 SpanStyle(fontWeight = FontWeight.Bold),
                 start = start2,
