@@ -388,6 +388,7 @@ fun SecondScreen(
             )
 
             Text(
+                modifier = Modifier.padding(horizontal = 0.dp, vertical = 20.dp),
                 text = if (setView > 0) AnnotatedString(
                     text = globalText2, spanStyles = spanStyles2
                 ) else AnnotatedString(
