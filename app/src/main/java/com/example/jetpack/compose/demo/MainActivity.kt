@@ -2,6 +2,7 @@ package com.example.jetpack.compose.demo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -44,6 +45,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -319,11 +321,10 @@ fun SecondScreen(
         val start = globalText.indexOf(phoneNumber)
         val spanStyles = listOf(
             AnnotatedString.Range(
-                SpanStyle(fontWeight = FontWeight.Normal, color = Color(0xFFBDBDBD), fontSize = 16.sp),
-                start = 0,
-                end = start - 1
-            ),
-            AnnotatedString.Range(
+                SpanStyle(
+                    fontWeight = FontWeight.Normal, color = Color(0xFFBDBDBD), fontSize = 16.sp
+                ), start = 0, end = start - 1
+            ), AnnotatedString.Range(
                 SpanStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp),
                 start = start,
                 end = start + phoneNumber.length
@@ -337,11 +338,10 @@ fun SecondScreen(
         val start2 = globalText2.indexOf(placeholder2)
         val spanStyles2 = listOf(
             AnnotatedString.Range(
-                SpanStyle(fontWeight = FontWeight.Normal, color = Color(0xFFBDBDBD), fontSize = 16.sp),
-                start = 0,
-                end = start2 - 1
-            ),
-            AnnotatedString.Range(
+                SpanStyle(
+                    fontWeight = FontWeight.Normal, color = Color(0xFFBDBDBD), fontSize = 16.sp
+                ), start = 0, end = start2 - 1
+            ), AnnotatedString.Range(
                 SpanStyle(fontWeight = FontWeight.Bold),
                 start = start2,
                 end = start2 + placeholder2.length
@@ -397,17 +397,25 @@ fun SecondScreen(
                 textAlign = TextAlign.Center
             )
 
-            Text(
+            val context = LocalContext.current
+            var isClicked by remember { mutableStateOf(false) }
+
+            ClickableText(
+                onClick = {
+                    if (!isClicked) {
+                        isClicked = true
+                    }
+                },
                 modifier = Modifier.padding(horizontal = 0.dp, vertical = 20.dp),
-                text = if (setView > 0) AnnotatedString(
+                text = if (isClicked) {
+                    AnnotatedString(
+                        text = "Hello World!"
+                    )
+                } else if (setView > 0) AnnotatedString(
                     text = globalText2, spanStyles = spanStyles2
                 ) else AnnotatedString(
                     text = stringResource(id = R.string.send_another_code), spanStyle = spanStyles3
-                ),
-                fontFamily = robotoFamily,
-                fontStyle = FontStyle.Normal,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center
+                )
             )
         }
 
