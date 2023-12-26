@@ -400,28 +400,26 @@ fun SecondScreen(
             )
 
             var isClicked by remember { mutableStateOf(false) }
-
-            ClickableText(
-                onClick = {
-                    if (!isClicked) {
-                        isClicked = true
-                    }
-                },
-                modifier = Modifier.padding(horizontal = 0.dp, vertical = 20.dp),
-                text = if (isClicked && setView <= 0) {
-                    AnnotatedString(
-                        text = "Hello World!"
-                    )
-                } else if (!isClicked && setView > 0) AnnotatedString(
-                    text = globalText2, spanStyles = spanStyles2
-                ) else AnnotatedString(
-                    text = stringResource(id = R.string.send_another_code), spanStyle = spanStyles3
+            if (isClicked) {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(64.dp), color = MaterialTheme.colorScheme.secondary
                 )
-            )
-            CircularProgressIndicator(
-                modifier = Modifier.width(64.dp),
-                color = MaterialTheme.colorScheme.secondary
-            )
+            } else {
+                ClickableText(
+                    onClick = {
+                        if (!isClicked && setView<=0) {
+                            isClicked = true
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 20.dp),
+                    text = if (setView > 0) AnnotatedString(
+                        text = globalText2, spanStyles = spanStyles2
+                    ) else AnnotatedString(
+                        text = stringResource(id = R.string.send_another_code),
+                        spanStyle = spanStyles3
+                    )
+                )
+            }
         }
 
         Row(modifier = Modifier.weight(1f)) {
