@@ -399,7 +399,6 @@ fun SecondScreen(
                 textAlign = TextAlign.Center
             )
 
-            val context = LocalContext.current
             var isClicked by remember { mutableStateOf(false) }
 
             ClickableText(
@@ -409,11 +408,11 @@ fun SecondScreen(
                     }
                 },
                 modifier = Modifier.padding(horizontal = 0.dp, vertical = 20.dp),
-                text = if (isClicked) {
+                text = if (isClicked && setView <= 0) {
                     AnnotatedString(
                         text = "Hello World!"
                     )
-                } else if (setView > 0) AnnotatedString(
+                } else if (!isClicked && setView > 0) AnnotatedString(
                     text = globalText2, spanStyles = spanStyles2
                 ) else AnnotatedString(
                     text = stringResource(id = R.string.send_another_code), spanStyle = spanStyles3
