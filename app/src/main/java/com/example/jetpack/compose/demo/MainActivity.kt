@@ -398,16 +398,28 @@ fun SecondScreen(
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
-
             var isClicked by remember { mutableStateOf(false) }
-            if (isClicked) {
+
+            var progressTimer by remember { mutableStateOf(3) }
+            LaunchedEffect(key1 = progressTimer) {
+                if (progressTimer in 0..3) {
+                    delay(1_000)
+                    progressTimer -= 1
+                } else if (progressTimer == -1) {
+                    progressTimer = 3
+                    isClicked = false
+                }
+            }
+
+
+            if (isClicked && progressTimer < 3) {
                 CircularProgressIndicator(
                     modifier = Modifier.width(64.dp), color = MaterialTheme.colorScheme.secondary
                 )
             } else {
                 ClickableText(
                     onClick = {
-                        if (!isClicked && setView<=0) {
+                        if (!isClicked && setView <= 0) {
                             isClicked = true
                         }
                     },
