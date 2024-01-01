@@ -2,7 +2,6 @@ package com.example.jetpack.compose.demo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -47,7 +46,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,15 +65,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.jetpack.compose.demo.ui.CountDownViewModel
 import com.example.jetpack.compose.demo.ui.theme.JetpackComposeDemoTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import kotlinx.coroutines.delay
 
 enum class DemoRoutes {
@@ -87,7 +81,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetpackComposeDemoTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
@@ -122,11 +115,7 @@ fun DemoApp(
                                 stringResource(R.string.log_in),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                                fontFamily = robotoFamily,
-                                letterSpacing = 0.01.sp,
-                                color = Color(0xFF212121)
+                                style = MaterialTheme.typography.headlineLarge,
                             )
                         },
                         navigationIcon = {
@@ -181,7 +170,9 @@ fun GreetingPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit) {
+fun StartScreen(
+    modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -210,8 +201,6 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit
                         },
                         tint = Color.Unspecified,
                     )
-                } else {
-                    null
                 }
             }, modifier = Modifier
                 .fillMaxWidth()
@@ -291,7 +280,7 @@ fun StartScreen(modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecondScreen(
-    modifier: Modifier = Modifier, viewModel: CountDownViewModel = viewModel(), phoneNumber: String
+    modifier: Modifier = Modifier, phoneNumber: String
 ) {
 
     var setView by remember { mutableStateOf(60) }

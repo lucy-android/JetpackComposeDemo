@@ -1,13 +1,23 @@
 package com.example.jetpack.compose.demo.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.jetpack.compose.demo.robotoFamily
 
 // Set of Material typography styles to start with
 val Typography = Typography(
+    headlineLarge = TextStyle(
+        fontFamily = robotoFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.01.sp,
+        color = Color(0xFF212121)
+    ),
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
