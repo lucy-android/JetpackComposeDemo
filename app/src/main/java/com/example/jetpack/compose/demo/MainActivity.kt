@@ -2,6 +2,7 @@ package com.example.jetpack.compose.demo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -189,9 +190,11 @@ fun StartScreen(
             letterSpacing = 0.01.sp,
             color = Color(0xFF333333)
         )
-        TextField(value = textState.value, onValueChange = { textState.value = it },
-
-            trailingIcon = {
+        TextField(value = textState.value, onValueChange = {
+            if (TextUtils.isDigitsOnly(it.text) || TextUtils.equals("+", "+")) {
+                textState.value = it
+            }
+        }, trailingIcon = {
                 if (textState.value.text.isNotBlank()) {
                     Icon(
                         contentDescription = "clear text",
@@ -347,7 +350,11 @@ fun SecondScreen(
             modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextField(value = textState.value, onValueChange = { textState.value = it },
+            TextField(value = textState.value, onValueChange = {
+                if (TextUtils.isDigitsOnly(it.text)) {
+                    textState.value = it
+                }
+            },
 
                 trailingIcon = {
                     if (textState.value.text.isNotBlank()) {
@@ -359,8 +366,6 @@ fun SecondScreen(
                             },
                             tint = Color.Unspecified,
                         )
-                    } else {
-                        null
                     }
                 }, modifier = Modifier
                     .fillMaxWidth()
