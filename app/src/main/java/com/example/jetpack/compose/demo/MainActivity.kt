@@ -191,7 +191,7 @@ fun StartScreen(
             color = Color(0xFF333333)
         )
         TextField(value = textState.value, onValueChange = {
-            if (TextUtils.isDigitsOnly(it.text) || TextUtils.equals("+", "+")) {
+            if (TextUtils.isDigitsOnly(it.text) || it.text.contains("+")) {
                 textState.value = it
             }
         }, trailingIcon = {
