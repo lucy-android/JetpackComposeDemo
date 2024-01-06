@@ -74,7 +74,7 @@ import com.example.jetpack.compose.demo.ui.theme.JetpackComposeDemoTheme
 import kotlinx.coroutines.delay
 
 enum class DemoRoutes {
-    Start, Sms
+    Start, Sms, LoggedIn
 }
 
 class MainActivity : ComponentActivity() {
@@ -146,8 +146,16 @@ fun DemoApp(
             composable(route = "${DemoRoutes.Sms.name}/{phoneNumber}") { navBackStackEntry ->
                 val phoneNumber = navBackStackEntry.arguments?.getString("phoneNumber")
                 phoneNumber?.let { number ->
-                    SecondScreen(modifier = Modifier.padding(16.dp), phoneNumber = number)
+                    SecondScreen(modifier = Modifier.padding(16.dp), phoneNumber = number) {
+                        navController.navigate(
+                            DemoRoutes.LoggedIn.name
+                        )
+                    }
                 }
+            }
+
+            composable(route = DemoRoutes.LoggedIn.name){
+                LoggedInScreen(modifier = Modifier.padding(16.dp))
             }
         }
     }
@@ -195,19 +203,19 @@ fun StartScreen(
                 textState.value = it
             }
         }, trailingIcon = {
-                if (textState.value.text.isNotBlank()) {
-                    Icon(
-                        contentDescription = "clear text",
-                        painter = painterResource(id = R.drawable.ic_close),
-                        modifier = Modifier.clickable {
-                            textState.value = TextFieldValue("")
-                        },
-                        tint = Color.Unspecified,
-                    )
-                }
-            }, modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
+            if (textState.value.text.isNotBlank()) {
+                Icon(
+                    contentDescription = "clear text",
+                    painter = painterResource(id = R.drawable.ic_close),
+                    modifier = Modifier.clickable {
+                        textState.value = TextFieldValue("")
+                    },
+                    tint = Color.Unspecified,
+                )
+            }
+        }, modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
 
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.Transparent,
@@ -283,7 +291,7 @@ fun StartScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecondScreen(
-    modifier: Modifier = Modifier, phoneNumber: String
+    modifier: Modifier = Modifier, phoneNumber: String, onButtonClicked: () -> Unit
 ) {
 
     var setView by remember { mutableStateOf(60) }
@@ -439,7 +447,7 @@ fun SecondScreen(
             )
         }
         Button(
-            onClick = { /* TODO */ },
+            onClick = { onButtonClicked.invoke() },
             modifier = Modifier
                 .padding(0.dp)
                 .fillMaxWidth()
@@ -516,4 +524,13 @@ fun HyperlinkText(
             uriHandler.openUri(stringAnnotation.item)
         }
     })
+}
+
+
+@Composable
+fun LoggedInScreen(
+    modifier: Modifier = Modifier
+) {
+
+
 }
