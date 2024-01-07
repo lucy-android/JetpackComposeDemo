@@ -531,6 +531,30 @@ fun HyperlinkText(
 fun LoggedInScreen(
     modifier: Modifier = Modifier
 ) {
-
-
+    Column {
+        Row(modifier = Modifier.weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .background(
+                        color = Color(0x33333340), shape = RoundedCornerShape(4.dp)
+                    )
+            )
+        }
+        Button(
+            onClick = {  },
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .alpha(1f),
+            shape = RoundedCornerShape(10)
+        ) {
+            Text(
+                text = stringResource(R.string.exit_text).uppercase(),
+                fontFamily = robotoFamily,
+                letterSpacing = 2.sp
+            )
+        }
+    }
 }
