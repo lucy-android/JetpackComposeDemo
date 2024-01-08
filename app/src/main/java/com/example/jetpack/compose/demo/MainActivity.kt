@@ -155,7 +155,7 @@ fun DemoApp(
             }
 
             composable(route = DemoRoutes.LoggedIn.name){
-                LoggedInScreen(modifier = Modifier.padding(16.dp))
+                LoggedInScreen(modifier = Modifier.padding(16.dp)) {navController.navigate(DemoRoutes.Start.name)}
             }
         }
     }
@@ -529,7 +529,7 @@ fun HyperlinkText(
 
 @Composable
 fun LoggedInScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier, navigateToStartAction: () -> Unit
 ) {
     Column {
         Row(modifier = Modifier.weight(1f)) {
@@ -543,7 +543,7 @@ fun LoggedInScreen(
             )
         }
         Button(
-            onClick = {  },
+            onClick = { navigateToStartAction.invoke() },
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
