@@ -100,6 +100,8 @@ fun DemoApp(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
+    var currentDestination by remember { mutableStateOf(DemoRoutes.Start.name) }
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
 
@@ -113,7 +115,11 @@ fun DemoApp(
                         ),
                         title = {
                             Text(
-                                stringResource(R.string.log_in),
+                                if (currentDestination != DemoRoutes.LoggedIn.name) {
+                                    stringResource(R.string.log_in)
+                                } else {
+                                    stringResource(R.string.main)
+                                },
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 style = MaterialTheme.typography.headlineLarge,
@@ -141,6 +147,7 @@ fun DemoApp(
         ) {
             composable(route = DemoRoutes.Start.name) {
                 StartScreen(modifier = Modifier.padding(16.dp)) { arg -> navController.navigate("${DemoRoutes.Sms.name}/$arg") }
+                currentDestination = DemoRoutes.Start.name
             }
 
             composable(route = "${DemoRoutes.Sms.name}/{phoneNumber}") { navBackStackEntry ->
@@ -152,10 +159,16 @@ fun DemoApp(
                         )
                     }
                 }
+                currentDestination = DemoRoutes.Sms.name
             }
 
-            composable(route = DemoRoutes.LoggedIn.name){
-                LoggedInScreen(modifier = Modifier.padding(16.dp)) {navController.navigate(DemoRoutes.Start.name)}
+            composable(route = DemoRoutes.LoggedIn.name) {
+                LoggedInScreen(modifier = Modifier.padding(16.dp)) {
+                    navController.navigate(
+                        DemoRoutes.Start.name
+                    )
+                }
+                currentDestination = DemoRoutes.LoggedIn.name
             }
         }
     }

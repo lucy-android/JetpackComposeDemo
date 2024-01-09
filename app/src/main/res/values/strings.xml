@@ -15,4 +15,5 @@
     <string name="personal_data">personal data</string>
     <string name="my_string">Fancy string with an %1$s placeholder</string>
     <string name="exit_text">Exit</string>
+    <string name="main">Main</string>
 </resources>
