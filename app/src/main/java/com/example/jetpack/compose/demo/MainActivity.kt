@@ -1,8 +1,11 @@
 package com.example.jetpack.compose.demo
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.TextUtils
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -66,6 +69,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -89,6 +94,31 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    fun sendSmsMessage(sendSms: () -> Unit) {
+        val ifPermissionGranted = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.SEND_SMS
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val shouldShowRequestPermissionRationale =
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this, Manifest.permission.SEND_SMS
+            )
+
+        if (!ifPermissionGranted && !shouldShowRequestPermissionRationale) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.SEND_SMS), PERMISSION_REQUEST_SEND_SMS
+            )
+        } else if (!shouldShowRequestPermissionRationale) {
+            sendSms.invoke()
+        } else {
+            Toast.makeText(this, "shouldShowRequestPermissionRationale", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    companion object {
+        const val PERMISSION_REQUEST_SEND_SMS = 1
     }
 }
 
