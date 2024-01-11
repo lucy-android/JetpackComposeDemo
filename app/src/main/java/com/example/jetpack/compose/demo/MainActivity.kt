@@ -85,7 +85,7 @@ enum class DemoRoutes {
 
 class MainActivity : ComponentActivity() {
 
-    private val sendSmsMessage = {
+    private fun sendSmsMessage() {
         val smsManager: SmsManager = SmsManager.getDefault()
 
         val ifPermissionGranted = ContextCompat.checkSelfPermission(
@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
                 this, arrayOf(Manifest.permission.SEND_SMS), PERMISSION_REQUEST_SEND_SMS
             )
         } else if (!shouldShowRequestPermissionRationale) {
-            smsManager.sendTextMessage("+375445215666", null, "Hello World", null, null)
+            smsManager.sendTextMessage("+000000000000", null, "Hello World", null, null)
         } else {
             Toast.makeText(this, "shouldShowRequestPermissionRationale", Toast.LENGTH_LONG).show()
         }
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    DemoApp(sendMessage = sendSmsMessage)
+                    DemoApp(sendMessage = { sendSmsMessage() })
                 }
             }
         }
