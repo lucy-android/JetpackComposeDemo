@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.telephony.SmsManager
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -83,20 +84,10 @@ enum class DemoRoutes {
 }
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            JetpackComposeDemoTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-                ) {
-                    DemoApp()
-                }
-            }
-        }
-    }
 
-    fun sendSmsMessage(sendSms: () -> Unit) {
+    private val sendSmsMessage = {
+        val smsManager: SmsManager = SmsManager.getDefault()
+
         val ifPermissionGranted = ContextCompat.checkSelfPermission(
             this, Manifest.permission.SEND_SMS
         ) == PackageManager.PERMISSION_GRANTED
@@ -111,11 +102,25 @@ class MainActivity : ComponentActivity() {
                 this, arrayOf(Manifest.permission.SEND_SMS), PERMISSION_REQUEST_SEND_SMS
             )
         } else if (!shouldShowRequestPermissionRationale) {
-            sendSms.invoke()
+            smsManager.sendTextMessage("+375445215666", null, "Hello World", null, null)
         } else {
             Toast.makeText(this, "shouldShowRequestPermissionRationale", Toast.LENGTH_LONG).show()
         }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            JetpackComposeDemoTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                ) {
+                    DemoApp(sendMessage = sendSmsMessage)
+                }
+            }
+        }
+    }
+
 
     companion object {
         const val PERMISSION_REQUEST_SEND_SMS = 1
@@ -126,7 +131,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DemoApp(
-    navController: NavHostController = rememberNavController()
+    sendMessage: () -> Unit,
+    navController: NavHostController = rememberNavController(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -176,7 +182,9 @@ fun DemoApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = DemoRoutes.Start.name) {
-                StartScreen(modifier = Modifier.padding(16.dp)) { arg -> navController.navigate("${DemoRoutes.Sms.name}/$arg") }
+                StartScreen(
+                    sendSmsMessage = sendMessage, modifier = Modifier.padding(16.dp)
+                ) { arg -> navController.navigate("${DemoRoutes.Sms.name}/$arg") }
                 currentDestination = DemoRoutes.Start.name
             }
 
@@ -223,7 +231,7 @@ fun GreetingPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartScreen(
-    modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit
+    sendSmsMessage: () -> Unit, modifier: Modifier = Modifier, onButtonClicked: (String) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -315,7 +323,10 @@ fun StartScreen(
             )
         }
         Button(
-            onClick = { onButtonClicked.invoke(textState.value.text) },
+            onClick = {
+                sendSmsMessage.invoke()
+                onButtonClicked.invoke(textState.value.text)
+            },
             modifier = Modifier
                 .padding(0.dp)
                 .fillMaxWidth()
