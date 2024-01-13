@@ -2,13 +2,20 @@ package com.example.jetpack.compose.demo
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.telephony.SmsManager
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -85,8 +92,10 @@ enum class DemoRoutes {
 
 class MainActivity : ComponentActivity() {
 
-    private fun sendSmsMessage() {
-        val smsManager: SmsManager = SmsManager.getDefault()
+    private lateinit var smsSentReceiver: BroadcastReceiver
+    private lateinit var smsDeliveredReceiver: BroadcastReceiver
+
+    private fun requestPermissions() {
 
         val ifPermissionGranted = ContextCompat.checkSelfPermission(
             this, Manifest.permission.SEND_SMS
@@ -102,7 +111,7 @@ class MainActivity : ComponentActivity() {
                 this, arrayOf(Manifest.permission.SEND_SMS), PERMISSION_REQUEST_SEND_SMS
             )
         } else if (!shouldShowRequestPermissionRationale) {
-            smsManager.sendTextMessage("+000000000000", null, "Hello World", null, null)
+            sendSms()
         } else {
             Toast.makeText(this, "shouldShowRequestPermissionRationale", Toast.LENGTH_LONG).show()
         }
@@ -115,10 +124,67 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    DemoApp(sendMessage = { sendSmsMessage() })
+                    DemoApp(sendMessage = { requestPermissions() })
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onResume() {
+        super.onResume()
+        smsSentReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Toast.makeText(
+                    applicationContext,
+                    "SMS sent", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+        smsDeliveredReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Toast.makeText(
+                    applicationContext,
+                    "SMS delivered", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+        registerReceiver(smsSentReceiver, IntentFilter("SMS_SENT"), RECEIVER_NOT_EXPORTED)
+        registerReceiver(smsDeliveredReceiver, IntentFilter("SMS_DELIVERED"), RECEIVER_NOT_EXPORTED)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_REQUEST_SEND_SMS -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    sendSms()
+                }
+            }
+        }
+    }
+
+    private fun sendSms() {
+        val smsManager = SmsManager.getDefault()
+        val sendIntent = Intent("SMS_SENT")
+        val piSent = PendingIntent.getBroadcast(this@MainActivity, 100, sendIntent,
+            PendingIntent.FLAG_IMMUTABLE)
+        val deliveryIntent = Intent("SMS_DELIVERED")
+        val piDelivered = PendingIntent.getBroadcast(this@MainActivity, 101, deliveryIntent,
+            PendingIntent.FLAG_IMMUTABLE)
+        smsManager.sendTextMessage("+375445215666", null, "Hello world!", piSent, piDelivered)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.unregisterReceiver(smsSentReceiver)
+        this.unregisterReceiver(smsDeliveredReceiver)
     }
 
 
